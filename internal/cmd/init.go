@@ -76,6 +76,7 @@ var initCmd = &cobra.Command{
 		cfgPath, _ := paths.UserConfigPath()
 		fmt.Printf("Wrote manifest and saved config to %s\n", cfgPath)
 		fmt.Println("Next: dot-agent add claude && dot-agent add cursor && dot-agent add hermes")
+		fmt.Println("Tip: dot-agent cd opens a shell in your source repo")
 	},
 }
 

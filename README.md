@@ -51,6 +51,8 @@ dot-agent pull --apply
 | `push` | Commit (if needed) and push |
 | `pull [--apply]` | Pull remote; optionally apply locally |
 | `doctor` | Validate git, paths, and manifest |
+| `source-path` | Print source repo path |
+| `cd` | Launch a shell in the source directory |
 
 ### Flags
 
@@ -58,6 +60,24 @@ dot-agent pull --apply
 - `apply --backup` — backup overwritten local files
 - `apply --force` — apply even when local files differ
 - `--source DIR` — override source repo path (default stored in user config)
+
+### `dot-agent cd`
+
+Like [chezmoi cd](https://www.chezmoi.io/reference/commands/cd/), this launches a **subshell** in your source repo — it does not change your current shell's directory. Exit the subshell to return where you were:
+
+```bash
+dot-agent cd
+git status
+exit
+```
+
+To change directory in your **current** shell instead:
+
+```bash
+cd "$(dot-agent source-path)"
+```
+
+Inside the subshell, `DOT_AGENT_SUBSHELL=1` and `DOT_AGENT_SOURCE_DIR` are set (useful for shell prompts).
 
 ## Source repo layout
 
