@@ -8,8 +8,9 @@ import (
 )
 
 var blockedBasenames = map[string]struct{}{
-	".env":              {},
-	"credentials.json":  {},
+	".env":             {},
+	"auth.json":        {},
+	"credentials.json": {},
 	"credentials.yaml":  {},
 	"credentials.yml":   {},
 	".netrc":            {},

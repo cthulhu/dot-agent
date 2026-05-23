@@ -17,7 +17,7 @@ var (
 var rootCmd = &cobra.Command{
 	Use:   "dot-agent",
 	Short: "Sync AI coding assistant configs via git",
-	Long:  "dot-agent manages Claude Code and Cursor configuration in a git repo and applies it across machines.",
+	Long:  "dot-agent manages Claude Code, Cursor, and Hermes Agent configuration in a git repo and applies it across machines.",
 }
 
 func Execute() {

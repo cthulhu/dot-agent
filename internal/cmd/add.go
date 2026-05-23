@@ -13,7 +13,7 @@ import (
 var addDryRun bool
 
 var addCmd = &cobra.Command{
-	Use:   "add [claude|cursor]",
+	Use:   "add [claude|cursor|hermes]",
 	Short: "Capture local assistant config into the source repo",
 	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -56,7 +56,7 @@ func resolveAssistantArgs(m *config.Manifest, args []string) ([]string, error) {
 	}
 	name := args[0]
 	if !assistant.IsKnown(name) {
-		return nil, fmt.Errorf("unknown assistant %q (use claude or cursor)", name)
+		return nil, fmt.Errorf("unknown assistant %q (use %s)", name, assistant.KnownNamesString())
 	}
 	return m.AssistantNames([]string{name})
 }

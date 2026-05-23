@@ -35,6 +35,9 @@ func TestBlocked(t *testing.T) {
 	if !ignore.Blocked("subdir/credentials.json") {
 		t.Fatal("expected credentials.json to be blocked")
 	}
+	if !ignore.Blocked("auth.json") {
+		t.Fatal("expected auth.json to be blocked")
+	}
 	if ignore.Blocked("settings.json") {
 		t.Fatal("did not expect settings.json to be blocked")
 	}

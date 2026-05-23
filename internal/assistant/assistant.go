@@ -11,6 +11,7 @@ import (
 const (
 	Claude = "claude"
 	Cursor = "cursor"
+	Hermes = "hermes"
 )
 
 // DefaultManifest returns the built-in dot-agent.yaml content for a fresh repo.
@@ -20,6 +21,7 @@ func DefaultManifest() *config.Manifest {
 		Assistants: map[string]config.AssistantEntry{
 			Claude: DefaultClaude(),
 			Cursor: DefaultCursor(),
+			Hermes: DefaultHermes(),
 		},
 	}
 }
@@ -59,13 +61,32 @@ func DefaultCursor() config.AssistantEntry {
 	}
 }
 
+func DefaultHermes() config.AssistantEntry {
+	return config.AssistantEntry{
+		Source: "assistants/hermes",
+		Target: "~/.hermes",
+		Ignore: []string{
+			".env",
+			"auth.json",
+			"**/sessions/**",
+			"**/logs/**",
+			"hermes-agent/**",
+			"**/*.log",
+		},
+	}
+}
+
 func KnownNames() []string {
-	return []string{Claude, Cursor}
+	return []string{Claude, Cursor, Hermes}
+}
+
+func KnownNamesString() string {
+	return "claude, cursor, hermes"
 }
 
 func IsKnown(name string) bool {
 	switch name {
-	case Claude, Cursor:
+	case Claude, Cursor, Hermes:
 		return true
 	default:
 		return false
