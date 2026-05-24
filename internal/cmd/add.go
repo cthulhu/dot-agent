@@ -13,7 +13,7 @@ import (
 var addDryRun bool
 
 var addCmd = &cobra.Command{
-	Use:   "add [claude|cursor|hermes|codex]",
+	Use:   "add [claude|cursor|hermes|codex|gemini]",
 	Short: "Capture local assistant config into the source repo",
 	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {

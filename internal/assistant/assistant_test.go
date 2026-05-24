@@ -43,6 +43,30 @@ func TestDefaultCodexIgnoresSecrets(t *testing.T) {
 	}
 }
 
+func TestDefaultGeminiIgnoresSecrets(t *testing.T) {
+	entry := assistant.DefaultGemini()
+	foundEnv := false
+	foundOAuth := false
+	foundTmp := false
+	for _, p := range entry.Ignore {
+		if p == ".env" {
+			foundEnv = true
+		}
+		if p == "oauth_creds.json" {
+			foundOAuth = true
+		}
+		if p == "**/tmp/**" {
+			foundTmp = true
+		}
+	}
+	if !foundEnv || !foundOAuth || !foundTmp {
+		t.Fatalf("expected gemini defaults to ignore secrets and tmp, got %v", entry.Ignore)
+	}
+	if entry.Target != "~/.gemini" {
+		t.Fatalf("expected gemini target ~/.gemini, got %q", entry.Target)
+	}
+}
+
 func TestKnownNamesIncludesAllAssistants(t *testing.T) {
 	names := assistant.KnownNames()
 	want := map[string]bool{
@@ -50,6 +74,7 @@ func TestKnownNamesIncludesAllAssistants(t *testing.T) {
 		assistant.Cursor: false,
 		assistant.Hermes: false,
 		assistant.Codex:  false,
+		assistant.Gemini: false,
 	}
 	for _, n := range names {
 		if _, ok := want[n]; ok {

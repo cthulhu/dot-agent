@@ -13,6 +13,7 @@ const (
 	Cursor = "cursor"
 	Hermes = "hermes"
 	Codex  = "codex"
+	Gemini = "gemini"
 )
 
 // DefaultManifest returns the built-in dot-agent.yaml content for a fresh repo.
@@ -24,6 +25,7 @@ func DefaultManifest() *config.Manifest {
 			Cursor: DefaultCursor(),
 			Hermes: DefaultHermes(),
 			Codex:  DefaultCodex(),
+			Gemini: DefaultGemini(),
 		},
 	}
 }
@@ -93,17 +95,42 @@ func DefaultCodex() config.AssistantEntry {
 	}
 }
 
+func DefaultGemini() config.AssistantEntry {
+	return config.AssistantEntry{
+		Source: "assistants/gemini",
+		Target: "~/.gemini",
+		Ignore: []string{
+			".env",
+			"**/.env",
+			"oauth_creds.json",
+			"mcp-oauth-tokens.json",
+			"a2a-oauth-tokens.json",
+			"google_accounts.json",
+			"installation_id",
+			"policy_integrity.json",
+			"trustedFolders.json",
+			"projects.json",
+			"**/tmp/**",
+			"**/history/**",
+			"**/logs/**",
+			"**/chats/**",
+			"**/checkpoints/**",
+			"**/*.log",
+		},
+	}
+}
+
 func KnownNames() []string {
-	return []string{Claude, Cursor, Hermes, Codex}
+	return []string{Claude, Cursor, Hermes, Codex, Gemini}
 }
 
 func KnownNamesString() string {
-	return "claude, cursor, hermes, codex"
+	return "claude, cursor, hermes, codex, gemini"
 }
 
 func IsKnown(name string) bool {
 	switch name {
-	case Claude, Cursor, Hermes, Codex:
+	case Claude, Cursor, Hermes, Codex, Gemini:
 		return true
 	default:
 		return false

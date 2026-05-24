@@ -2,7 +2,7 @@
 
 Sync AI coding assistant configuration across machines using git.
 
-Supports **Claude Code** (`~/.claude`), **Cursor** (`~/.cursor`), **[Hermes Agent](https://github.com/NousResearch/hermes-agent)** (`~/.hermes`), and **[OpenAI Codex](https://developers.openai.com/codex)** (`~/.codex`) on macOS, Linux, and Windows.
+Supports **Claude Code** (`~/.claude`), **Cursor** (`~/.cursor`), **[Hermes Agent](https://github.com/NousResearch/hermes-agent)** (`~/.hermes`), **[OpenAI Codex](https://developers.openai.com/codex)** (`~/.codex`), and **[Gemini CLI](https://geminicli.com/docs/)** (`~/.gemini`) on macOS, Linux, and Windows.
 
 ## Install
 
@@ -45,6 +45,7 @@ dot-agent add claude
 dot-agent add cursor
 dot-agent add hermes
 dot-agent add codex
+dot-agent add gemini
 dot-agent push
 ```
 
@@ -60,9 +61,9 @@ dot-agent pull --apply
 | Command | Description |
 |---------|-------------|
 | `init [--repo URL] [--path DIR]` | Create or clone the source git repo |
-| `add [claude\|cursor\|hermes\|codex]` | Capture local config into the repo |
-| `apply [claude\|cursor\|hermes\|codex]` | Write repo config to local directories |
-| `diff [claude\|cursor\|hermes\|codex]` | Show differences (source vs local) |
+| `add [claude\|cursor\|hermes\|codex\|gemini]` | Capture local config into the repo |
+| `apply [claude\|cursor\|hermes\|codex\|gemini]` | Write repo config to local directories |
+| `diff [claude\|cursor\|hermes\|codex\|gemini]` | Show differences (source vs local) |
 | `status` | Git status + config drift |
 | `push` | Commit (if needed) and push |
 | `pull [--apply]` | Pull remote; optionally apply locally |
@@ -104,11 +105,14 @@ assistants/
   cursor/
   hermes/
   codex/
+  gemini/
 ```
 
 Hermes syncs portable config (`config.yaml`, `SOUL.md`, `memories/`, `skills/`, `cron/`) and skips secrets (`.env`, `auth.json`), sessions, logs, and the installed source tree (`hermes-agent/`). On native Windows, Hermes may use `%LOCALAPPDATA%\hermes` instead of `~/.hermes` — override `target` in `dot-agent.yaml` if needed.
 
 Codex syncs portable config (`config.toml`, `AGENTS.md`, rules/instructions) and skips `auth.json`, session history, logs, and caches. Override `target` if you use a custom `CODEX_HOME`.
+
+Gemini CLI syncs portable config (`settings.json`, `GEMINI.md`, `skills/`, `commands/`, `agents/`, `extensions/`, `policies/`) and skips OAuth tokens, `.env` files, session history, caches, and machine-local state. Override `target` if you use a custom `GEMINI_CLI_HOME`.
 
 Default paths:
 

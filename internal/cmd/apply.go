@@ -14,7 +14,7 @@ var (
 )
 
 var applyCmd = &cobra.Command{
-	Use:   "apply [claude|cursor|hermes|codex]",
+	Use:   "apply [claude|cursor|hermes|codex|gemini]",
 	Short: "Apply source repo config to local assistant directories",
 	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
