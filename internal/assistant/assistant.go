@@ -137,6 +137,43 @@ func IsKnown(name string) bool {
 	}
 }
 
+func DefaultEntry(name string) (config.AssistantEntry, bool) {
+	switch name {
+	case Claude:
+		return DefaultClaude(), true
+	case Cursor:
+		return DefaultCursor(), true
+	case Hermes:
+		return DefaultHermes(), true
+	case Codex:
+		return DefaultCodex(), true
+	case Gemini:
+		return DefaultGemini(), true
+	default:
+		return config.AssistantEntry{}, false
+	}
+}
+
+// MergeMissingAssistants adds built-in defaults for any known assistant not yet in the manifest.
+func MergeMissingAssistants(m *config.Manifest) []string {
+	if m.Assistants == nil {
+		m.Assistants = make(map[string]config.AssistantEntry)
+	}
+	var added []string
+	for _, name := range KnownNames() {
+		if _, ok := m.Assistants[name]; ok {
+			continue
+		}
+		entry, ok := DefaultEntry(name)
+		if !ok {
+			continue
+		}
+		m.Assistants[name] = entry
+		added = append(added, name)
+	}
+	return added
+}
+
 func WriteDefaultManifest(sourceDir string) error {
 	path := filepath.Join(sourceDir, "dot-agent.yaml")
 	if _, err := os.Stat(path); err == nil {

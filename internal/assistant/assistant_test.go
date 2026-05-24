@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/cthulhu/dot-agent/internal/assistant"
+	"github.com/cthulhu/dot-agent/internal/config"
 )
 
 func TestDefaultHermesIgnoresSecrets(t *testing.T) {
@@ -85,5 +86,24 @@ func TestKnownNamesIncludesAllAssistants(t *testing.T) {
 		if !found {
 			t.Fatalf("expected %q in KnownNames, got %v", name, names)
 		}
+	}
+}
+
+func TestMergeMissingAssistants(t *testing.T) {
+	m := &config.Manifest{
+		Version: 1,
+		Assistants: map[string]config.AssistantEntry{
+			assistant.Claude: assistant.DefaultClaude(),
+		},
+	}
+	added := assistant.MergeMissingAssistants(m)
+	if len(added) != 4 {
+		t.Fatalf("expected 4 assistants added, got %v", added)
+	}
+	if _, ok := m.Assistants[assistant.Gemini]; !ok {
+		t.Fatal("expected gemini in manifest after merge")
+	}
+	if again := assistant.MergeMissingAssistants(m); len(again) != 0 {
+		t.Fatalf("expected no assistants added on second merge, got %v", again)
 	}
 }

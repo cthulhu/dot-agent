@@ -3,7 +3,10 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 
+	"github.com/cthulhu/dot-agent/internal/assistant"
 	"github.com/cthulhu/dot-agent/internal/config"
 	"github.com/cthulhu/dot-agent/internal/paths"
 	"github.com/spf13/cobra"
@@ -55,6 +58,18 @@ func loadManifest() (*config.Manifest, string, error) {
 	m, err := config.LoadManifest(manifestPath)
 	if err != nil {
 		return nil, sourceDir, fmt.Errorf("load manifest at %s: %w (run dot-agent init first)", manifestPath, err)
+	}
+	if added := assistant.MergeMissingAssistants(m); len(added) > 0 {
+		if err := config.WriteManifest(manifestPath, m); err != nil {
+			return nil, sourceDir, fmt.Errorf("update manifest at %s: %w", manifestPath, err)
+		}
+		for _, name := range added {
+			dir := filepath.Join(sourceDir, "assistants", name)
+			if err := os.MkdirAll(dir, 0o755); err != nil {
+				return nil, sourceDir, fmt.Errorf("create assistant dir %s: %w", dir, err)
+			}
+		}
+		fmt.Fprintf(os.Stderr, "Updated dot-agent.yaml: added %s\n", strings.Join(added, ", "))
 	}
 	return m, sourceDir, nil
 }
