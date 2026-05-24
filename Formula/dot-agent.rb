@@ -1,8 +1,8 @@
 class DotAgent < Formula
   desc "Sync AI coding assistant configuration across machines using git"
   homepage "https://github.com/cthulhu/dot-agent"
-  url "https://github.com/cthulhu/dot-agent/archive/refs/tags/v0.2.0.tar.gz"
-  sha256 "c495cd9334fdbf3e8e782a7162b9b4a66c625e1dc20e52be9f82ea2b9c9b5669"
+  url "https://github.com/cthulhu/dot-agent/archive/refs/tags/v0.3.0.tar.gz"
+  sha256 "5bcff24b3feaec12b0121dc7a6247b84362fcc1196267aa85324b7984b08d9e5"
   license "MIT"
   head "https://github.com/cthulhu/dot-agent.git", branch: "main"
 
