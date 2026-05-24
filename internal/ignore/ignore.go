@@ -31,7 +31,7 @@ func New(patterns ...string) *Matcher {
 func (m *Matcher) Ignored(relPath string) (bool, error) {
 	rel := filepath.ToSlash(relPath)
 	for _, pattern := range m.patterns {
-		match, err := doublestar.PathMatch(pattern, rel)
+		match, err := doublestar.Match(filepath.ToSlash(pattern), rel)
 		if err != nil {
 			return false, err
 		}

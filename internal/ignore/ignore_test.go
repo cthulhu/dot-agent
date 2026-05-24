@@ -1,6 +1,7 @@
 package ignore_test
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/cthulhu/dot-agent/internal/ignore"
@@ -25,6 +26,15 @@ func TestMatcherIgnored(t *testing.T) {
 		if got != tc.ignore {
 			t.Fatalf("Ignored(%q) = %v, want %v", tc.path, got, tc.ignore)
 		}
+	}
+
+	// Paths with OS-native separators must match the same patterns.
+	got, err := m.Ignored(filepath.Join("cache", "foo.txt"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !got {
+		t.Fatalf("expected Ignored(%q) = true", filepath.Join("cache", "foo.txt"))
 	}
 }
 
