@@ -6,19 +6,33 @@ Supports **Claude Code** (`~/.claude`), **Cursor** (`~/.cursor`), and **[Hermes 
 
 ## Install
 
+### Homebrew (macOS / Linux)
+
+```bash
+brew install cthulhu/dot-agent/dot-agent
+```
+
+Install the latest development build from `main`:
+
+```bash
+brew install --HEAD cthulhu/dot-agent/dot-agent
+```
+
+Requires **git** in your `PATH` (installed automatically via Homebrew).
+
+### Go
+
 ```bash
 go install github.com/cthulhu/dot-agent/cmd/dot-agent@latest
 ```
 
-Or build from source:
+### From source
 
 ```bash
 git clone https://github.com/cthulhu/dot-agent.git
 cd dot-agent
 go build -o dot-agent ./cmd/dot-agent
 ```
-
-Requires **git** in your `PATH`.
 
 ## Quick start
 
