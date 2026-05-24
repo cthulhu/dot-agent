@@ -23,15 +23,42 @@ func TestDefaultHermesIgnoresSecrets(t *testing.T) {
 	}
 }
 
-func TestKnownNamesIncludesHermes(t *testing.T) {
-	names := assistant.KnownNames()
-	found := false
-	for _, n := range names {
-		if n == assistant.Hermes {
-			found = true
+func TestDefaultCodexIgnoresSecrets(t *testing.T) {
+	entry := assistant.DefaultCodex()
+	foundAuth := false
+	foundHistory := false
+	for _, p := range entry.Ignore {
+		if p == "auth.json" {
+			foundAuth = true
+		}
+		if p == "history.jsonl" {
+			foundHistory = true
 		}
 	}
-	if !found {
-		t.Fatal("expected hermes in KnownNames")
+	if !foundAuth || !foundHistory {
+		t.Fatalf("expected codex defaults to ignore auth.json and history.jsonl, got %v", entry.Ignore)
+	}
+	if entry.Target != "~/.codex" {
+		t.Fatalf("expected codex target ~/.codex, got %q", entry.Target)
+	}
+}
+
+func TestKnownNamesIncludesAllAssistants(t *testing.T) {
+	names := assistant.KnownNames()
+	want := map[string]bool{
+		assistant.Claude: false,
+		assistant.Cursor: false,
+		assistant.Hermes: false,
+		assistant.Codex:  false,
+	}
+	for _, n := range names {
+		if _, ok := want[n]; ok {
+			want[n] = true
+		}
+	}
+	for name, found := range want {
+		if !found {
+			t.Fatalf("expected %q in KnownNames, got %v", name, names)
+		}
 	}
 }
