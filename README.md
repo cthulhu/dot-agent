@@ -9,13 +9,14 @@ Supports **Claude Code** (`~/.claude`), **Cursor** (`~/.cursor`), and **[Hermes 
 ### Homebrew (macOS / Linux)
 
 ```bash
-brew install cthulhu/dot-agent/dot-agent
+brew tap cthulhu/dot-agent https://github.com/cthulhu/dot-agent
+brew install dot-agent
 ```
 
 Install the latest development build from `main`:
 
 ```bash
-brew install --HEAD cthulhu/dot-agent/dot-agent
+brew install --HEAD dot-agent
 ```
 
 Requires **git** in your `PATH` (installed automatically via Homebrew).
