@@ -23,6 +23,10 @@ var pullCmd = &cobra.Command{
 			fatal(err)
 		}
 
+		if err := ensureGitRemote(sourceDir); err != nil {
+			fatal(err)
+		}
+
 		if err := git.Pull(sourceDir); err != nil {
 			fatal(err)
 		}

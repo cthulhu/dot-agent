@@ -83,13 +83,25 @@ func Commit(dir, message string) error {
 }
 
 func Push(dir string) error {
-	_, err := run(dir, "push")
+	branch, err := CurrentBranch(dir)
+	if err != nil {
+		return err
+	}
+	_, err = run(dir, "push", "-u", "origin", branch)
 	return err
 }
 
 func Pull(dir string) error {
-	_, err := run(dir, "pull", "--ff-only")
+	branch, err := CurrentBranch(dir)
+	if err != nil {
+		return err
+	}
+	_, err = run(dir, "pull", "--ff-only", "origin", branch)
 	return err
+}
+
+func CurrentBranch(dir string) (string, error) {
+	return run(dir, "rev-parse", "--abbrev-ref", "HEAD")
 }
 
 func StatusPorcelain(dir string) (string, error) {

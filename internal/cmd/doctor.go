@@ -56,6 +56,19 @@ var doctorCmd = &cobra.Command{
 			report("source git repo exists")
 		}
 
+		if _, err := git.RemoteURL(sourceDir); err != nil {
+			userCfg, cfgErr := paths.LoadUserConfig()
+			if cfgErr != nil {
+				fail(fmt.Sprintf("remote: %v", err))
+			} else if userCfg != nil && userCfg.RemoteURL != "" {
+				fmt.Printf("warn: git remote not set; push/pull will configure origin from config: %s\n", userCfg.RemoteURL)
+			} else {
+				fail("no git remote configured; run dot-agent init --repo <url> or git remote add origin <url>")
+			}
+		} else {
+			report("git remote origin configured")
+		}
+
 		manifestPath := paths.ManifestPath(sourceDir)
 		m, err := config.LoadManifest(manifestPath)
 		if err != nil {

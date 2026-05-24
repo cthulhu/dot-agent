@@ -20,6 +20,10 @@ var pushCmd = &cobra.Command{
 			fatal(err)
 		}
 
+		if err := ensureGitRemote(sourceDir); err != nil {
+			fatal(err)
+		}
+
 		if err := git.Commit(sourceDir, "dot-agent: sync assistant config"); err != nil {
 			fatal(err)
 		}

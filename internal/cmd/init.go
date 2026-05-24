@@ -75,6 +75,11 @@ var initCmd = &cobra.Command{
 
 		cfgPath, _ := paths.UserConfigPath()
 		fmt.Printf("Wrote manifest and saved config to %s\n", cfgPath)
+		if initRepoURL == "" {
+			fmt.Println("Note: configure a remote before push/pull:")
+			fmt.Println("  dot-agent init --repo git@github.com:you/dot-agent.git")
+			fmt.Println("  or: git -C <source> remote add origin <url>")
+		}
 		fmt.Println("Next: dot-agent add claude && dot-agent add cursor && dot-agent add hermes && dot-agent add codex")
 		fmt.Println("Tip: dot-agent cd opens a shell in your source repo")
 	},
