@@ -3,33 +3,46 @@ package assistant
 import (
 	"os"
 	"path/filepath"
+	"sort"
+	"strings"
 
 	"github.com/cthulhu/dot-agent/internal/config"
 )
 
 // Known assistant names supported in v1.
 const (
-	Claude = "claude"
-	Cursor = "cursor"
-	Hermes = "hermes"
+	Claude  = "claude"
+	Cursor  = "cursor"
+	Hermes  = "hermes"
 	Codex   = "codex"
 	Gemini  = "gemini"
 	Copilot = "copilot"
 )
 
+type assistantInfo struct {
+	displayName string
+	defaultFn   func() config.AssistantEntry
+}
+
+var registry = map[string]assistantInfo{
+	Claude:  {displayName: "Claude Code", defaultFn: DefaultClaude},
+	Cursor:  {displayName: "Cursor", defaultFn: DefaultCursor},
+	Hermes:  {displayName: "Hermes Agent", defaultFn: DefaultHermes},
+	Codex:   {displayName: "OpenAI Codex", defaultFn: DefaultCodex},
+	Gemini:  {displayName: "Gemini CLI", defaultFn: DefaultGemini},
+	Copilot: {displayName: "GitHub Copilot CLI", defaultFn: DefaultCopilot},
+}
+
 // DefaultManifest returns the built-in dot-agent.yaml content for a fresh repo.
 func DefaultManifest() *config.Manifest {
-	return &config.Manifest{
-		Version: 1,
-		Assistants: map[string]config.AssistantEntry{
-			Claude: DefaultClaude(),
-			Cursor: DefaultCursor(),
-			Hermes: DefaultHermes(),
-			Codex:  DefaultCodex(),
-			Gemini:  DefaultGemini(),
-			Copilot: DefaultCopilot(),
-		},
+	m := &config.Manifest{
+		Version:    1,
+		Assistants: make(map[string]config.AssistantEntry),
 	}
+	for name, info := range registry {
+		m.Assistants[name] = info.defaultFn()
+	}
+	return m
 }
 
 func DefaultClaude() config.AssistantEntry {
@@ -142,39 +155,38 @@ func DefaultCopilot() config.AssistantEntry {
 }
 
 func KnownNames() []string {
-	return []string{Claude, Cursor, Hermes, Codex, Gemini, Copilot}
+	names := make([]string, 0, len(registry))
+	for name := range registry {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	return names
 }
 
 func KnownNamesString() string {
-	return "claude, cursor, hermes, codex, gemini, copilot"
+	return strings.Join(KnownNames(), ", ")
+}
+
+func DisplayNamesString() string {
+	names := make([]string, 0, len(registry))
+	for _, info := range registry {
+		names = append(names, info.displayName)
+	}
+	sort.Strings(names)
+	return strings.Join(names, ", ")
 }
 
 func IsKnown(name string) bool {
-	switch name {
-	case Claude, Cursor, Hermes, Codex, Gemini, Copilot:
-		return true
-	default:
-		return false
-	}
+	_, ok := registry[name]
+	return ok
 }
 
 func DefaultEntry(name string) (config.AssistantEntry, bool) {
-	switch name {
-	case Claude:
-		return DefaultClaude(), true
-	case Cursor:
-		return DefaultCursor(), true
-	case Hermes:
-		return DefaultHermes(), true
-	case Codex:
-		return DefaultCodex(), true
-	case Gemini:
-		return DefaultGemini(), true
-	case Copilot:
-		return DefaultCopilot(), true
-	default:
+	info, ok := registry[name]
+	if !ok {
 		return config.AssistantEntry{}, false
 	}
+	return info.defaultFn(), true
 }
 
 // MergeMissingAssistants adds built-in defaults for any known assistant not yet in the manifest.

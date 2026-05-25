@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/cthulhu/dot-agent/internal/assistant"
 	"github.com/cthulhu/dot-agent/internal/git"
@@ -80,7 +81,12 @@ var initCmd = &cobra.Command{
 			fmt.Println("  dot-agent init --repo git@github.com:you/dot-agent.git")
 			fmt.Println("  or: git -C <source> remote add origin <url>")
 		}
-		fmt.Println("Next: dot-agent add claude && dot-agent add cursor && dot-agent add hermes && dot-agent add codex && dot-agent add gemini && dot-agent add copilot")
+
+		var nextCmds []string
+		for _, name := range assistant.KnownNames() {
+			nextCmds = append(nextCmds, "dot-agent add "+name)
+		}
+		fmt.Printf("Next: %s\n", strings.Join(nextCmds, " && "))
 		fmt.Println("Tip: dot-agent cd opens a shell in your source repo")
 	},
 }

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/cthulhu/dot-agent/internal/assistant"
 	"github.com/cthulhu/dot-agent/internal/config"
@@ -13,7 +14,6 @@ import (
 var addDryRun bool
 
 var addCmd = &cobra.Command{
-	Use:   "add [claude|cursor|hermes|codex|gemini|copilot]",
 	Short: "Capture local assistant config into the source repo",
 	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -62,6 +62,7 @@ func resolveAssistantArgs(m *config.Manifest, args []string) ([]string, error) {
 }
 
 func init() {
+	addCmd.Use = fmt.Sprintf("add [%s]", strings.ReplaceAll(assistant.KnownNamesString(), ", ", "|"))
 	addCmd.Flags().BoolVar(&addDryRun, "dry-run", false, "show what would be captured without writing")
 	rootCmd.AddCommand(addCmd)
 }

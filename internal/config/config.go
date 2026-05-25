@@ -3,6 +3,8 @@ package config
 import (
 	"fmt"
 	"os"
+	"sort"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -59,7 +61,12 @@ func WriteManifest(path string, m *Manifest) error {
 func (m *Manifest) ResolveAssistant(name string) (AssistantEntry, error) {
 	entry, ok := m.Assistants[name]
 	if !ok {
-		return AssistantEntry{}, fmt.Errorf("unknown assistant %q (known: claude, cursor, hermes, codex, gemini, copilot)", name)
+		var names []string
+		for k := range m.Assistants {
+			names = append(names, k)
+		}
+		sort.Strings(names)
+		return AssistantEntry{}, fmt.Errorf("assistant %q not found in manifest (available: %s)", name, strings.Join(names, ", "))
 	}
 	return entry, nil
 }

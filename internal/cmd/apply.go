@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/cthulhu/dot-agent/internal/assistant"
 	"github.com/cthulhu/dot-agent/internal/sync"
 	"github.com/spf13/cobra"
 )
@@ -14,7 +16,6 @@ var (
 )
 
 var applyCmd = &cobra.Command{
-	Use:   "apply [claude|cursor|hermes|codex|gemini|copilot]",
 	Short: "Apply source repo config to local assistant directories",
 	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -63,6 +64,7 @@ var applyCmd = &cobra.Command{
 }
 
 func init() {
+	applyCmd.Use = fmt.Sprintf("apply [%s]", strings.ReplaceAll(assistant.KnownNamesString(), ", ", "|"))
 	applyCmd.Flags().BoolVar(&applyDryRun, "dry-run", false, "show what would change without writing")
 	applyCmd.Flags().BoolVar(&applyBackup, "backup", false, "backup overwritten local files")
 	applyCmd.Flags().BoolVar(&applyForce, "force", false, "apply even when local config differs")

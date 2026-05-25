@@ -2,13 +2,14 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/cthulhu/dot-agent/internal/assistant"
 	"github.com/cthulhu/dot-agent/internal/sync"
 	"github.com/spf13/cobra"
 )
 
 var diffCmd = &cobra.Command{
-	Use:   "diff [claude|cursor|hermes|codex|gemini|copilot]",
 	Short: "Show differences between source repo and local config",
 	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -42,5 +43,6 @@ var diffCmd = &cobra.Command{
 }
 
 func init() {
+	diffCmd.Use = fmt.Sprintf("diff [%s]", strings.ReplaceAll(assistant.KnownNamesString(), ", ", "|"))
 	rootCmd.AddCommand(diffCmd)
 }

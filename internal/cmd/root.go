@@ -14,13 +14,12 @@ import (
 
 var (
 	sourceFlag string
-	version    = "0.5.0"
+	version    = "0.6.0"
 )
 
 var rootCmd = &cobra.Command{
 	Use:   "dot-agent",
 	Short: "Sync AI coding assistant configs via git",
-	Long:  "dot-agent manages Claude Code, Cursor, Hermes Agent, OpenAI Codex, Gemini CLI, and GitHub Copilot CLI configuration in a git repo and applies it across machines.",
 }
 
 func Execute() {
@@ -30,6 +29,7 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.Long = fmt.Sprintf("dot-agent manages %s configuration in a git repo and applies it across machines.", assistant.DisplayNamesString())
 	rootCmd.PersistentFlags().StringVar(&sourceFlag, "source", "", "path to dot-agent source git repo (default: from config or OS default)")
 	rootCmd.SetVersionTemplate("dot-agent {{.Version}}\n")
 	rootCmd.Version = version
