@@ -1,6 +1,6 @@
 module github.com/cthulhu/dot-agent
 
-go 1.25.0
+go 1.26
 
 require (
 	github.com/bmatcuk/doublestar/v4 v4.8.1
