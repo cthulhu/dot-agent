@@ -21,6 +21,7 @@ jobs:
       - name: Run tests
         run: go run github.com/onsi/ginkgo/v2/ginkgo -r -cover -coverprofile=coverage.txt
       - name: Coverage Report
+        shell: bash
         run: |
           echo "## Test Coverage" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
