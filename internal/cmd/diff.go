@@ -8,7 +8,7 @@ import (
 )
 
 var diffCmd = &cobra.Command{
-	Use:   "diff [claude|cursor|hermes|codex|gemini]",
+	Use:   "diff [claude|cursor|hermes|codex|gemini|copilot]",
 	Short: "Show differences between source repo and local config",
 	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {

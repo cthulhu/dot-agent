@@ -59,7 +59,7 @@ func WriteManifest(path string, m *Manifest) error {
 func (m *Manifest) ResolveAssistant(name string) (AssistantEntry, error) {
 	entry, ok := m.Assistants[name]
 	if !ok {
-		return AssistantEntry{}, fmt.Errorf("unknown assistant %q (known: claude, cursor, hermes, codex, gemini)", name)
+		return AssistantEntry{}, fmt.Errorf("unknown assistant %q (known: claude, cursor, hermes, codex, gemini, copilot)", name)
 	}
 	return entry, nil
 }

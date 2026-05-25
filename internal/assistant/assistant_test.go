@@ -68,14 +68,35 @@ func TestDefaultGeminiIgnoresSecrets(t *testing.T) {
 	}
 }
 
+func TestDefaultCopilotIgnoresSecrets(t *testing.T) {
+	entry := assistant.DefaultCopilot()
+	foundConfig := false
+	foundSessions := false
+	for _, p := range entry.Ignore {
+		if p == "config.json" {
+			foundConfig = true
+		}
+		if p == "**/session-state/**" {
+			foundSessions = true
+		}
+	}
+	if !foundConfig || !foundSessions {
+		t.Fatalf("expected copilot defaults to ignore config.json and session-state, got %v", entry.Ignore)
+	}
+	if entry.Target != "~/.copilot" {
+		t.Fatalf("expected copilot target ~/.copilot, got %q", entry.Target)
+	}
+}
+
 func TestKnownNamesIncludesAllAssistants(t *testing.T) {
 	names := assistant.KnownNames()
 	want := map[string]bool{
-		assistant.Claude: false,
-		assistant.Cursor: false,
-		assistant.Hermes: false,
-		assistant.Codex:  false,
-		assistant.Gemini: false,
+		assistant.Claude:  false,
+		assistant.Cursor:  false,
+		assistant.Hermes:  false,
+		assistant.Codex:   false,
+		assistant.Gemini:  false,
+		assistant.Copilot: false,
 	}
 	for _, n := range names {
 		if _, ok := want[n]; ok {
@@ -97,11 +118,14 @@ func TestMergeMissingAssistants(t *testing.T) {
 		},
 	}
 	added := assistant.MergeMissingAssistants(m)
-	if len(added) != 4 {
-		t.Fatalf("expected 4 assistants added, got %v", added)
+	if len(added) != 5 {
+		t.Fatalf("expected 5 assistants added, got %v", added)
 	}
 	if _, ok := m.Assistants[assistant.Gemini]; !ok {
 		t.Fatal("expected gemini in manifest after merge")
+	}
+	if _, ok := m.Assistants[assistant.Copilot]; !ok {
+		t.Fatal("expected copilot in manifest after merge")
 	}
 	if again := assistant.MergeMissingAssistants(m); len(again) != 0 {
 		t.Fatalf("expected no assistants added on second merge, got %v", again)

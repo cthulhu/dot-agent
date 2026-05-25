@@ -80,7 +80,7 @@ var initCmd = &cobra.Command{
 			fmt.Println("  dot-agent init --repo git@github.com:you/dot-agent.git")
 			fmt.Println("  or: git -C <source> remote add origin <url>")
 		}
-		fmt.Println("Next: dot-agent add claude && dot-agent add cursor && dot-agent add hermes && dot-agent add codex && dot-agent add gemini")
+		fmt.Println("Next: dot-agent add claude && dot-agent add cursor && dot-agent add hermes && dot-agent add codex && dot-agent add gemini && dot-agent add copilot")
 		fmt.Println("Tip: dot-agent cd opens a shell in your source repo")
 	},
 }

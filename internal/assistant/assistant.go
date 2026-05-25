@@ -12,8 +12,9 @@ const (
 	Claude = "claude"
 	Cursor = "cursor"
 	Hermes = "hermes"
-	Codex  = "codex"
-	Gemini = "gemini"
+	Codex   = "codex"
+	Gemini  = "gemini"
+	Copilot = "copilot"
 )
 
 // DefaultManifest returns the built-in dot-agent.yaml content for a fresh repo.
@@ -25,7 +26,8 @@ func DefaultManifest() *config.Manifest {
 			Cursor: DefaultCursor(),
 			Hermes: DefaultHermes(),
 			Codex:  DefaultCodex(),
-			Gemini: DefaultGemini(),
+			Gemini:  DefaultGemini(),
+			Copilot: DefaultCopilot(),
 		},
 	}
 }
@@ -120,17 +122,36 @@ func DefaultGemini() config.AssistantEntry {
 	}
 }
 
+func DefaultCopilot() config.AssistantEntry {
+	return config.AssistantEntry{
+		Source: "assistants/copilot",
+		Target: "~/.copilot",
+		Ignore: []string{
+			".env",
+			"**/.env",
+			"config.json",
+			"session-store.db",
+			"**/session-state/**",
+			"**/command-history-state/**",
+			"**/logs/**",
+			"**/ide/**",
+			"**/plugin-data/**",
+			"**/*.log",
+		},
+	}
+}
+
 func KnownNames() []string {
-	return []string{Claude, Cursor, Hermes, Codex, Gemini}
+	return []string{Claude, Cursor, Hermes, Codex, Gemini, Copilot}
 }
 
 func KnownNamesString() string {
-	return "claude, cursor, hermes, codex, gemini"
+	return "claude, cursor, hermes, codex, gemini, copilot"
 }
 
 func IsKnown(name string) bool {
 	switch name {
-	case Claude, Cursor, Hermes, Codex, Gemini:
+	case Claude, Cursor, Hermes, Codex, Gemini, Copilot:
 		return true
 	default:
 		return false
@@ -149,6 +170,8 @@ func DefaultEntry(name string) (config.AssistantEntry, bool) {
 		return DefaultCodex(), true
 	case Gemini:
 		return DefaultGemini(), true
+	case Copilot:
+		return DefaultCopilot(), true
 	default:
 		return config.AssistantEntry{}, false
 	}
