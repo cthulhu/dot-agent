@@ -2,7 +2,7 @@
 
 Sync AI coding assistant configuration across machines using git.
 
-Supports **Claude Code** (`~/.claude`), **Cursor** (`~/.cursor`), **[Hermes Agent](https://github.com/NousResearch/hermes-agent)** (`~/.hermes`), **[OpenAI Codex](https://developers.openai.com/codex)** (`~/.codex`), **[Gemini CLI](https://geminicli.com/docs/)** (`~/.gemini`), and **[GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/set-up-for-self/use-copilot-in-the-cli)** (`~/.copilot`) on macOS, Linux, and Windows.
+Supports **Claude Code** (`~/.claude`), **Cursor** (`~/.cursor`), **[Hermes Agent](https://github.com/NousResearch/hermes-agent)** (`~/.hermes`), **[OpenAI Codex](https://developers.openai.com/codex)** (`~/.codex`), **[Gemini CLI](https://geminicli.com/docs/)** (`~/.gemini`), **[GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/set-up-for-self/use-copilot-in-the-cli)** (`~/.copilot`), and **[Antigravity CLI](https://antigravity.google)** (`~/.gemini/antigravity-cli`) on macOS, Linux, and Windows.
 
 ## Install
 
@@ -47,6 +47,7 @@ dot-agent add hermes
 dot-agent add codex
 dot-agent add gemini
 dot-agent add copilot
+dot-agent add antigravity
 dot-agent push
 ```
 
@@ -62,9 +63,9 @@ dot-agent pull --apply
 | Command | Description |
 |---------|-------------|
 | `init [--repo URL] [--path DIR]` | Create or clone the source git repo |
-| `add [claude\|cursor\|hermes\|codex\|gemini\|copilot]` | Capture local config into the repo |
-| `apply [claude\|cursor\|hermes\|codex\|gemini\|copilot]` | Write repo config to local directories |
-| `diff [claude\|cursor\|hermes\|codex\|gemini\|copilot]` | Show differences (source vs local) |
+| `add [claude\|cursor\|hermes\|codex\|gemini\|copilot\|antigravity]` | Capture local config into the repo |
+| `apply [claude\|cursor\|hermes\|codex\|gemini\|copilot\|antigravity]` | Write repo config to local directories |
+| `diff [claude\|cursor\|hermes\|codex\|gemini\|copilot\|antigravity]` | Show differences (source vs local) |
 | `status` | Git status + config drift |
 | `push` | Commit (if needed) and push |
 | `pull [--apply]` | Pull remote; optionally apply locally |
@@ -108,6 +109,7 @@ assistants/
   codex/
   gemini/
   copilot/
+  antigravity/
 ```
 
 Hermes syncs portable config (`config.yaml`, `SOUL.md`, `memories/`, `skills/`, `cron/`) and skips secrets (`.env`, `auth.json`), sessions, logs, and the installed source tree (`hermes-agent/`). On native Windows, Hermes may use `%LOCALAPPDATA%\hermes` instead of `~/.hermes` — override `target` in `dot-agent.yaml` if needed.

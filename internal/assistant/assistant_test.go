@@ -31,6 +31,12 @@ var _ = Describe("Assistant", func() {
 			Expect(entry.Ignore).To(ContainElements("config.json", "**/session-state/**"))
 			Expect(entry.Target).To(Equal("~/.copilot"))
 		})
+
+		It("Antigravity should ignore secrets and local logs/history, and have correct target", func() {
+			entry := assistant.DefaultAntigravity()
+			Expect(entry.Ignore).To(ContainElements(".env", "installation_id", "history.jsonl", "**/brain/**", "**/knowledge/**", "**/*.lock"))
+			Expect(entry.Target).To(Equal("~/.gemini/antigravity-cli"))
+		})
 	})
 
 	Describe("Assistant Registry", func() {
@@ -43,6 +49,7 @@ var _ = Describe("Assistant", func() {
 				assistant.Codex,
 				assistant.Gemini,
 				assistant.Copilot,
+				assistant.Antigravity,
 			))
 		})
 
@@ -54,9 +61,10 @@ var _ = Describe("Assistant", func() {
 				},
 			}
 			added := assistant.MergeMissingAssistants(m)
-			Expect(added).To(HaveLen(5))
+			Expect(added).To(HaveLen(6))
 			Expect(m.Assistants).To(HaveKey(assistant.Gemini))
 			Expect(m.Assistants).To(HaveKey(assistant.Copilot))
+			Expect(m.Assistants).To(HaveKey(assistant.Antigravity))
 
 			again := assistant.MergeMissingAssistants(m)
 			Expect(again).To(BeEmpty())

@@ -11,12 +11,13 @@ import (
 
 // Known assistant names supported in v1.
 const (
-	Claude  = "claude"
-	Cursor  = "cursor"
-	Hermes  = "hermes"
-	Codex   = "codex"
-	Gemini  = "gemini"
-	Copilot = "copilot"
+	Claude      = "claude"
+	Cursor      = "cursor"
+	Hermes      = "hermes"
+	Codex       = "codex"
+	Gemini      = "gemini"
+	Copilot     = "copilot"
+	Antigravity = "antigravity"
 )
 
 type assistantInfo struct {
@@ -25,12 +26,13 @@ type assistantInfo struct {
 }
 
 var registry = map[string]assistantInfo{
-	Claude:  {displayName: "Claude Code", defaultFn: DefaultClaude},
-	Cursor:  {displayName: "Cursor", defaultFn: DefaultCursor},
-	Hermes:  {displayName: "Hermes Agent", defaultFn: DefaultHermes},
-	Codex:   {displayName: "OpenAI Codex", defaultFn: DefaultCodex},
-	Gemini:  {displayName: "Gemini CLI", defaultFn: DefaultGemini},
-	Copilot: {displayName: "GitHub Copilot CLI", defaultFn: DefaultCopilot},
+	Claude:      {displayName: "Claude Code", defaultFn: DefaultClaude},
+	Cursor:      {displayName: "Cursor", defaultFn: DefaultCursor},
+	Hermes:      {displayName: "Hermes Agent", defaultFn: DefaultHermes},
+	Codex:       {displayName: "OpenAI Codex", defaultFn: DefaultCodex},
+	Gemini:      {displayName: "Gemini CLI", defaultFn: DefaultGemini},
+	Copilot:     {displayName: "GitHub Copilot CLI", defaultFn: DefaultCopilot},
+	Antigravity: {displayName: "Antigravity", defaultFn: DefaultAntigravity},
 }
 
 // DefaultManifest returns the built-in dot-agent.yaml content for a fresh repo.
@@ -150,6 +152,31 @@ func DefaultCopilot() config.AssistantEntry {
 			"**/ide/**",
 			"**/plugin-data/**",
 			"**/*.log",
+		},
+	}
+}
+
+func DefaultAntigravity() config.AssistantEntry {
+	return config.AssistantEntry{
+		Source: "assistants/antigravity",
+		Target: "~/.gemini/antigravity-cli",
+		Ignore: []string{
+			".env",
+			"**/.env",
+			"installation_id",
+			"last_check.timestamp",
+			"cli.log",
+			"history.jsonl",
+			"**/bin/**",
+			"**/brain/**",
+			"**/cache/**",
+			"**/conversations/**",
+			"**/implicit/**",
+			"**/knowledge/**",
+			"**/log/**",
+			"**/updater/**",
+			"**/*.log",
+			"**/*.lock",
 		},
 	}
 }
