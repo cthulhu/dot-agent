@@ -125,6 +125,10 @@ Default paths:
 
 Sensitive and machine-local paths are ignored by default (caches, projects, extensions, credentials). Edit `dot-agent.yaml` in your source repo to customize ignore patterns.
 
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTE.md](CONTRIBUTE.md) for guidelines.
+
 ## License
 
 MIT
