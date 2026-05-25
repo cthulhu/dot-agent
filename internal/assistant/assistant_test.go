@@ -1,133 +1,65 @@
 package assistant_test
 
 import (
-	"testing"
-
 	"github.com/cthulhu/dot-agent/internal/assistant"
 	"github.com/cthulhu/dot-agent/internal/config"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
-func TestDefaultHermesIgnoresSecrets(t *testing.T) {
-	entry := assistant.DefaultHermes()
-	foundEnv := false
-	foundAuth := false
-	for _, p := range entry.Ignore {
-		if p == ".env" {
-			foundEnv = true
-		}
-		if p == "auth.json" {
-			foundAuth = true
-		}
-	}
-	if !foundEnv || !foundAuth {
-		t.Fatalf("expected hermes defaults to ignore .env and auth.json, got %v", entry.Ignore)
-	}
-}
+var _ = Describe("Assistant", func() {
+	Describe("Default Configurations", func() {
+		It("Hermes should ignore secrets", func() {
+			entry := assistant.DefaultHermes()
+			Expect(entry.Ignore).To(ContainElements(".env", "auth.json"))
+		})
 
-func TestDefaultCodexIgnoresSecrets(t *testing.T) {
-	entry := assistant.DefaultCodex()
-	foundAuth := false
-	foundHistory := false
-	for _, p := range entry.Ignore {
-		if p == "auth.json" {
-			foundAuth = true
-		}
-		if p == "history.jsonl" {
-			foundHistory = true
-		}
-	}
-	if !foundAuth || !foundHistory {
-		t.Fatalf("expected codex defaults to ignore auth.json and history.jsonl, got %v", entry.Ignore)
-	}
-	if entry.Target != "~/.codex" {
-		t.Fatalf("expected codex target ~/.codex, got %q", entry.Target)
-	}
-}
+		It("Codex should ignore secrets and have correct target", func() {
+			entry := assistant.DefaultCodex()
+			Expect(entry.Ignore).To(ContainElements("auth.json", "history.jsonl"))
+			Expect(entry.Target).To(Equal("~/.codex"))
+		})
 
-func TestDefaultGeminiIgnoresSecrets(t *testing.T) {
-	entry := assistant.DefaultGemini()
-	foundEnv := false
-	foundOAuth := false
-	foundTmp := false
-	for _, p := range entry.Ignore {
-		if p == ".env" {
-			foundEnv = true
-		}
-		if p == "oauth_creds.json" {
-			foundOAuth = true
-		}
-		if p == "**/tmp/**" {
-			foundTmp = true
-		}
-	}
-	if !foundEnv || !foundOAuth || !foundTmp {
-		t.Fatalf("expected gemini defaults to ignore secrets and tmp, got %v", entry.Ignore)
-	}
-	if entry.Target != "~/.gemini" {
-		t.Fatalf("expected gemini target ~/.gemini, got %q", entry.Target)
-	}
-}
+		It("Gemini should ignore secrets and tmp, and have correct target", func() {
+			entry := assistant.DefaultGemini()
+			Expect(entry.Ignore).To(ContainElements(".env", "oauth_creds.json", "**/tmp/**"))
+			Expect(entry.Target).To(Equal("~/.gemini"))
+		})
 
-func TestDefaultCopilotIgnoresSecrets(t *testing.T) {
-	entry := assistant.DefaultCopilot()
-	foundConfig := false
-	foundSessions := false
-	for _, p := range entry.Ignore {
-		if p == "config.json" {
-			foundConfig = true
-		}
-		if p == "**/session-state/**" {
-			foundSessions = true
-		}
-	}
-	if !foundConfig || !foundSessions {
-		t.Fatalf("expected copilot defaults to ignore config.json and session-state, got %v", entry.Ignore)
-	}
-	if entry.Target != "~/.copilot" {
-		t.Fatalf("expected copilot target ~/.copilot, got %q", entry.Target)
-	}
-}
+		It("Copilot should ignore secrets and sessions, and have correct target", func() {
+			entry := assistant.DefaultCopilot()
+			Expect(entry.Ignore).To(ContainElements("config.json", "**/session-state/**"))
+			Expect(entry.Target).To(Equal("~/.copilot"))
+		})
+	})
 
-func TestKnownNamesIncludesAllAssistants(t *testing.T) {
-	names := assistant.KnownNames()
-	want := map[string]bool{
-		assistant.Claude:  false,
-		assistant.Cursor:  false,
-		assistant.Hermes:  false,
-		assistant.Codex:   false,
-		assistant.Gemini:  false,
-		assistant.Copilot: false,
-	}
-	for _, n := range names {
-		if _, ok := want[n]; ok {
-			want[n] = true
-		}
-	}
-	for name, found := range want {
-		if !found {
-			t.Fatalf("expected %q in KnownNames, got %v", name, names)
-		}
-	}
-}
+	Describe("Assistant Registry", func() {
+		It("KnownNames should include all assistants", func() {
+			names := assistant.KnownNames()
+			Expect(names).To(ContainElements(
+				assistant.Claude,
+				assistant.Cursor,
+				assistant.Hermes,
+				assistant.Codex,
+				assistant.Gemini,
+				assistant.Copilot,
+			))
+		})
 
-func TestMergeMissingAssistants(t *testing.T) {
-	m := &config.Manifest{
-		Version: 1,
-		Assistants: map[string]config.AssistantEntry{
-			assistant.Claude: assistant.DefaultClaude(),
-		},
-	}
-	added := assistant.MergeMissingAssistants(m)
-	if len(added) != 5 {
-		t.Fatalf("expected 5 assistants added, got %v", added)
-	}
-	if _, ok := m.Assistants[assistant.Gemini]; !ok {
-		t.Fatal("expected gemini in manifest after merge")
-	}
-	if _, ok := m.Assistants[assistant.Copilot]; !ok {
-		t.Fatal("expected copilot in manifest after merge")
-	}
-	if again := assistant.MergeMissingAssistants(m); len(again) != 0 {
-		t.Fatalf("expected no assistants added on second merge, got %v", again)
-	}
-}
+		It("MergeMissingAssistants should add missing assistants to manifest", func() {
+			m := &config.Manifest{
+				Version: 1,
+				Assistants: map[string]config.AssistantEntry{
+					assistant.Claude: assistant.DefaultClaude(),
+				},
+			}
+			added := assistant.MergeMissingAssistants(m)
+			Expect(added).To(HaveLen(5))
+			Expect(m.Assistants).To(HaveKey(assistant.Gemini))
+			Expect(m.Assistants).To(HaveKey(assistant.Copilot))
+
+			again := assistant.MergeMissingAssistants(m)
+			Expect(again).To(BeEmpty())
+		})
+	})
+})

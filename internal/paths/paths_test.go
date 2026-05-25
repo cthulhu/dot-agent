@@ -4,48 +4,37 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-	"testing"
 
 	"github.com/cthulhu/dot-agent/internal/paths"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
-func TestExpandPathHome(t *testing.T) {
-	home, err := paths.HomeDir()
-	if err != nil {
-		t.Fatal(err)
-	}
+var _ = Describe("Paths", func() {
+	It("should expand home directory paths", func() {
+		home, err := paths.HomeDir()
+		Expect(err).NotTo(HaveOccurred())
 
-	got, err := paths.ExpandPath("~/.claude")
-	if err != nil {
-		t.Fatal(err)
-	}
-	want := filepath.Join(home, ".claude")
-	if got != want {
-		t.Fatalf("ExpandPath(~/.claude) = %q, want %q", got, want)
-	}
-}
+		got, err := paths.ExpandPath("~/.claude")
+		Expect(err).NotTo(HaveOccurred())
 
-func TestDefaultSourceDir(t *testing.T) {
-	dir, err := paths.DefaultSourceDir()
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !strings.Contains(dir, "dot-agent") {
-		t.Fatalf("expected dot-agent in path, got %q", dir)
-	}
-	if runtime.GOOS == "windows" {
-		if !strings.Contains(strings.ToLower(dir), "local") {
-			t.Fatalf("expected LOCALAPPDATA-style path on windows, got %q", dir)
+		want := filepath.Join(home, ".claude")
+		Expect(got).To(Equal(want))
+	})
+
+	It("should provide a default source directory", func() {
+		dir, err := paths.DefaultSourceDir()
+		Expect(err).NotTo(HaveOccurred())
+		Expect(dir).To(ContainSubstring("dot-agent"))
+
+		if runtime.GOOS == "windows" {
+			Expect(strings.ToLower(dir)).To(ContainSubstring("local"))
 		}
-	}
-}
+	})
 
-func TestConfigDir(t *testing.T) {
-	dir, err := paths.ConfigDir()
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !strings.Contains(dir, "dot-agent") {
-		t.Fatalf("expected dot-agent in config path, got %q", dir)
-	}
-}
+	It("should provide a configuration directory", func() {
+		dir, err := paths.ConfigDir()
+		Expect(err).NotTo(HaveOccurred())
+		Expect(dir).To(ContainSubstring("dot-agent"))
+	})
+})
