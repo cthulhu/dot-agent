@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>dot-agent</id>
+    <version>0.7.0</version>
+    <title>dot-agent</title>
+    <authors>cthulhu</authors>
+    <owners>cthulhu</owners>
+    <projectUrl>https://github.com/cthulhu/dot-agent</projectUrl>
+    <licenseUrl>https://github.com/cthulhu/dot-agent/blob/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/cthulhu/dot-agent</projectSourceUrl>
+    <bugTrackerUrl>https://github.com/cthulhu/dot-agent/issues</bugTrackerUrl>
+    <tags>dot-agent dotfiles ai-agent claude cursor git backup config sync</tags>
+    <summary>Sync AI coding assistant configuration across machines using git</summary>
+    <description>
+Sync AI coding assistant configuration across machines using git.
+Supports Claude Code, Cursor, Hermes Agent, OpenAI Codex, Gemini CLI, GitHub Copilot CLI, and Antigravity CLI on macOS, Linux, and Windows.
+    </description>
+    <releaseNotes>https://github.com/cthulhu/dot-agent/releases</releaseNotes>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

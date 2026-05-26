@@ -21,6 +21,12 @@ brew install --HEAD dot-agent
 
 Requires **git** in your `PATH` (installed automatically via Homebrew).
 
+### Chocolatey (Windows)
+
+```powershell
+choco install dot-agent
+```
+
 ### Go
 
 ```bash
