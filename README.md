@@ -23,8 +23,14 @@ Requires **git** in your `PATH` (installed automatically via Homebrew).
 
 ### Chocolatey (Windows)
 
+To install via Chocolatey using GitHub Packages as a custom source (similar to a Homebrew tap):
+
 ```powershell
-choco install dot-agent
+# Register the GitHub Packages source (run as Administrator)
+choco source add -n="cthulhu" -s="https://nuget.pkg.github.com/cthulhu/index.json"
+
+# Install dot-agent from the custom source
+choco install dot-agent --source="cthulhu"
 ```
 
 ### Go

@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  packages: write
 
 jobs:
   release:
@@ -46,3 +47,12 @@ jobs:
             dot-agent_*_darwin_*.tar.gz
             dot-agent_*_linux_*.tar.gz
             dot-agent_*_windows_*.zip
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Pack and Publish Chocolatey Package to GitHub Packages
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          nuget pack chocolatey/dot-agent.nuspec -Version "$VERSION" -OutputDirectory .
+          dotnet nuget push "*.nupkg" --api-key "${{ secrets.GITHUB_TOKEN }}" --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
