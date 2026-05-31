@@ -54,6 +54,5 @@ jobs:
       - name: Pack and Publish Chocolatey Package to GitHub Packages
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
-          sudo apt-get update && sudo apt-get install -y mono-complete
-          mono "$NUGET" pack chocolatey/dot-agent.nuspec -Version "$VERSION" -OutputDirectory .
+          nuget pack chocolatey/dot-agent.nuspec -Version "$VERSION" -OutputDirectory .
           dotnet nuget push "*.nupkg" --api-key "${{ secrets.GITHUB_TOKEN }}" --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
