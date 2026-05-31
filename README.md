@@ -84,6 +84,13 @@ dot-agent pull --apply
 | `doctor` | Validate git, paths, and manifest |
 | `source-path` | Print source repo path |
 | `cd` | Launch a shell in the source directory |
+| `base init` | Initialize `~/.dot-agent/base/skills` library |
+| `base skills list` | List skills in the base library |
+| `base skills show <skill>` | Show a base skill's `SKILL.md` |
+| `base skills pull <assistant> [skill\|--all]` | Copy skill(s) from an assistant into base |
+| `base skills push <assistant> [skill\|--all]` | Copy skill(s) from base into an assistant |
+| `base skills remove <skill>` | Remove a skill from base |
+| `base skills copy from\|to\|between ...` | Copy skills via base or between assistants |
 
 ### Flags
 
@@ -134,10 +141,24 @@ Copilot CLI syncs portable config (`settings.json`, `copilot-instructions.md`, `
 
 Default paths:
 
-| OS | Source repo | User config |
-|----|-------------|-------------|
-| macOS / Linux | `~/.local/share/dot-agent/source` | `~/.config/dot-agent/config.yaml` |
-| Windows | `%LOCALAPPDATA%\dot-agent\source` | `%APPDATA%\dot-agent\config.yaml` |
+| OS | Source repo | User config | Base library |
+|----|-------------|-------------|--------------|
+| macOS / Linux | `~/.local/share/dot-agent/source` | `~/.config/dot-agent/config.yaml` | `~/.dot-agent/base/skills` |
+| Windows | `%LOCALAPPDATA%\dot-agent\source` | `%APPDATA%\dot-agent\config.yaml` | `%USERPROFILE%\.dot-agent\base\skills` |
+
+### Base skills library
+
+The base library at `~/.dot-agent/base/skills` is a local collection of reusable skills. It is **not** synced via your dot-agent git repo — use it as a staging area to copy skills between assistants.
+
+```bash
+dot-agent base init
+dot-agent base skills pull cursor babysit
+dot-agent base skills list
+dot-agent base skills push claude babysit
+dot-agent base skills copy between cursor gemini babysit
+```
+
+Skills-aware assistants: `claude`, `cursor`, `hermes`, `gemini`, `copilot`. Use `--repo` with pull/push/copy to read from or write to your source repo instead of local assistant directories. Use `--force` to overwrite existing skills.
 
 ## What gets synced
 

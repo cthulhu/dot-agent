@@ -37,4 +37,11 @@ var _ = Describe("Paths", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Expect(dir).To(ContainSubstring("dot-agent"))
 	})
+
+	It("should provide a base directory under home", func() {
+		dir, err := paths.BaseDir()
+		Expect(err).NotTo(HaveOccurred())
+		Expect(dir).To(ContainSubstring(".dot-agent"))
+		Expect(dir).To(ContainSubstring("base"))
+	})
 })

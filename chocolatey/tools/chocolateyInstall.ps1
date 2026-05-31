@@ -5,7 +5,7 @@ $toolsDir    = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 $version     = $env:ChocolateyPackageVersion
 
 if ([string]::IsNullOrEmpty($version)) {
-  $version = '0.7.0'
+  $version = '0.8.0'
 }
 
 $packageArgs = @{

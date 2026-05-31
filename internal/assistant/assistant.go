@@ -236,6 +236,23 @@ func MergeMissingAssistants(m *config.Manifest) []string {
 	return added
 }
 
+// SkillsRelPath returns the skills directory name relative to an assistant's target root.
+func SkillsRelPath(name string) (string, bool) {
+	switch name {
+	case Claude, Hermes, Gemini, Copilot:
+		return "skills", true
+	case Cursor:
+		return "skills-cursor", true
+	default:
+		return "", false
+	}
+}
+
+func SupportsSkills(name string) bool {
+	_, ok := SkillsRelPath(name)
+	return ok
+}
+
 func WriteDefaultManifest(sourceDir string) error {
 	path := filepath.Join(sourceDir, "dot-agent.yaml")
 	if _, err := os.Stat(path); err == nil {

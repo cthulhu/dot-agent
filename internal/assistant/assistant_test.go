@@ -53,6 +53,19 @@ var _ = Describe("Assistant", func() {
 			))
 		})
 
+		It("SkillsRelPath should map assistants to their skills directories", func() {
+			rel, ok := assistant.SkillsRelPath(assistant.Claude)
+			Expect(ok).To(BeTrue())
+			Expect(rel).To(Equal("skills"))
+
+			rel, ok = assistant.SkillsRelPath(assistant.Cursor)
+			Expect(ok).To(BeTrue())
+			Expect(rel).To(Equal("skills-cursor"))
+
+			_, ok = assistant.SkillsRelPath(assistant.Codex)
+			Expect(ok).To(BeFalse())
+		})
+
 		It("MergeMissingAssistants should add missing assistants to manifest", func() {
 			m := &config.Manifest{
 				Version: 1,

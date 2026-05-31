@@ -136,3 +136,20 @@ func SaveUserConfig(cfg *UserConfig) error {
 func ManifestPath(sourceDir string) string {
 	return filepath.Join(sourceDir, ManifestName)
 }
+
+// BaseDir returns ~/.dot-agent/base — the local skills library (not synced via git).
+func BaseDir() (string, error) {
+	home, err := HomeDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(home, ".dot-agent", "base"), nil
+}
+
+func BaseSkillsDir() (string, error) {
+	dir, err := BaseDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(dir, "skills"), nil
+}
