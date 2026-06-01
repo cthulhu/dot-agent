@@ -14,7 +14,7 @@ import (
 
 var (
 	sourceFlag string
-	version    = "0.8.2"
+	version    = "0.8.3"
 )
 
 var rootCmd = &cobra.Command{
