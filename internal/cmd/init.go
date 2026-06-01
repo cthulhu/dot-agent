@@ -63,6 +63,10 @@ var initCmd = &cobra.Command{
 			}
 		}
 
+		if err := writeDefaultREADME(sourceDir); err != nil {
+			fatal(err)
+		}
+
 		userCfg := &paths.UserConfig{SourcePath: sourceDir}
 		if initRepoURL != "" {
 			userCfg.RemoteURL = initRepoURL
@@ -99,6 +103,79 @@ func resolveInitSourceDir() (string, error) {
 		return paths.ExpandPath(sourceFlag)
 	}
 	return paths.DefaultSourceDir()
+}
+
+func writeDefaultREADME(sourceDir string) error {
+	readme := filepath.Join(sourceDir, "README.md")
+	if _, err := os.Stat(readme); err == nil {
+		return nil
+	}
+	// Also check for lowercase readme.md
+	if _, err := os.Stat(filepath.Join(sourceDir, "readme.md")); err == nil {
+		return nil
+	}
+
+	content := `# dot-agent configuration
+
+This repository contains configuration and skills for your AI assistants, managed by [dot-agent](https://github.com/cthulhu/dot-agent).
+
+## Prerequisites
+
+Install **dot-agent**:
+
+### Homebrew (macOS / Linux)
+
+` + "```bash" + `
+brew tap cthulhu/dot-agent https://github.com/cthulhu/dot-agent
+brew install dot-agent
+` + "```" + `
+
+### Chocolatey (Windows)
+
+` + "```powershell" + `
+# Register the GitHub Packages source (run as Administrator)
+choco source add -n="cthulhu" -s="https://nuget.pkg.github.com/cthulhu/index.json"
+
+# Install dot-agent from the custom source
+choco install dot-agent --source="cthulhu"
+` + "```" + `
+
+## Usage
+
+### Sync to a new machine
+
+` + "```bash" + `
+dot-agent init --repo <this-repo-url>
+dot-agent pull --apply
+` + "```" + `
+
+### Capture local changes
+
+` + "```bash" + `
+# Capture changes for a specific assistant
+dot-agent add claude
+
+# Push changes to the remote repository
+dot-agent push
+` + "```" + `
+
+### Apply changes from repo to local
+
+` + "```bash" + `
+# Pull latest changes from the remote repository
+dot-agent pull
+
+# Apply changes to local assistant directories
+dot-agent apply
+` + "```" + `
+
+## Repository Layout
+
+- ` + "`dot-agent.yaml`" + `: Main configuration file
+- ` + "`assistants/`" + `: Directory containing assistant-specific configurations and skills
+`
+
+	return os.WriteFile(readme, []byte(content), 0o644)
 }
 
 func init() {
