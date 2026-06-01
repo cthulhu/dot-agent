@@ -51,6 +51,9 @@ jobs:
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
 
+      - name: Install Mono
+        run: sudo apt-get update && sudo apt-get install -y mono-runtime
+
       - name: Pack and Publish Chocolatey Package to GitHub Packages
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
