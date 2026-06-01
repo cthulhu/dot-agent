@@ -5,7 +5,7 @@ $toolsDir    = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 $version     = $env:ChocolateyPackageVersion
 
 if ([string]::IsNullOrEmpty($version)) {
-  $version = '0.8.3'
+  $version = '0.8.4'
 }
 
 $packageArgs = @{
@@ -19,7 +19,7 @@ $packageArgs = @{
 
 Install-ChocolateyZipPackage @packageArgs
 
-# Rename the extracted dot-agent_0.8.3_windows_amd64.exe to dot-agent.exe so that Chocolatey automatically shims it.
+# Rename the extracted dot-agent_0.8.4_windows_amd64.exe to dot-agent.exe so that Chocolatey automatically shims it.
 $extractedExe = Get-ChildItem -Path $toolsDir -Filter "dot-agent_*.exe" | Select-Object -First 1
 if ($extractedExe) {
   Rename-Item -Path $extractedExe.FullName -NewName "dot-agent.exe"
