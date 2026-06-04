@@ -96,13 +96,19 @@ var initCmd = &cobra.Command{
 }
 
 func resolveInitSourceDir() (string, error) {
+	var dir string
+	var err error
 	if initPath != "" {
-		return paths.ExpandPath(initPath)
+		dir, err = paths.ExpandPath(initPath)
+	} else if sourceFlag != "" {
+		dir, err = paths.ExpandPath(sourceFlag)
+	} else {
+		dir, err = paths.DefaultSourceDir()
 	}
-	if sourceFlag != "" {
-		return paths.ExpandPath(sourceFlag)
+	if err != nil {
+		return "", err
 	}
-	return paths.DefaultSourceDir()
+	return filepath.Abs(dir)
 }
 
 func writeDefaultREADME(sourceDir string) error {

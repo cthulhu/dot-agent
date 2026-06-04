@@ -42,10 +42,7 @@ func ConfigDir() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if xdg := os.Getenv("XDG_CONFIG_HOME"); xdg != "" {
-		return filepath.Join(xdg, ConfigDirName), nil
-	}
-	return filepath.Join(home, ".config", ConfigDirName), nil
+	return filepath.Join(home, "."+ConfigDirName), nil
 }
 
 func DefaultSourceDir() (string, error) {
@@ -64,10 +61,7 @@ func DefaultSourceDir() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if xdg := os.Getenv("XDG_DATA_HOME"); xdg != "" {
-		return filepath.Join(xdg, ConfigDirName, "source"), nil
-	}
-	return filepath.Join(home, ".local", "share", ConfigDirName, "source"), nil
+	return filepath.Join(home, "."+ConfigDirName, "source"), nil
 }
 
 // ExpandPath resolves ~ and environment variables in a path string.

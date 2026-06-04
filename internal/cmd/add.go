@@ -7,6 +7,7 @@ import (
 	"github.com/cthulhu/dot-agent/internal/assistant"
 	"github.com/cthulhu/dot-agent/internal/config"
 	"github.com/cthulhu/dot-agent/internal/git"
+	"github.com/cthulhu/dot-agent/internal/paths"
 	"github.com/cthulhu/dot-agent/internal/sync"
 	"github.com/spf13/cobra"
 )
@@ -28,17 +29,36 @@ var addCmd = &cobra.Command{
 		}
 
 		opts := sync.Options{DryRun: addDryRun}
+		manifestUpdated := false
 		for _, name := range names {
 			entry, err := m.ResolveAssistant(name)
 			if err != nil {
-				fatal(err)
+				// If missing but known, add it now
+				if defaultEntry, ok := assistant.DefaultEntry(name); ok {
+					fmt.Printf("Adding %s to manifest...\n", name)
+					if m.Assistants == nil {
+						m.Assistants = make(map[string]config.AssistantEntry)
+					}
+					m.Assistants[name] = defaultEntry
+					entry = defaultEntry
+					manifestUpdated = true
+				} else {
+					fatal(err)
+				}
 			}
+
 			fmt.Printf("Adding %s...\n", name)
 			result, err := sync.Add(sourceDir, entry, opts)
 			if err != nil {
 				fatal(err)
 			}
 			sync.PrintResult(result)
+		}
+
+		if manifestUpdated && !addDryRun {
+			if err := config.WriteManifest(paths.ManifestPath(sourceDir), m); err != nil {
+				fatal(err)
+			}
 		}
 
 		if !addDryRun {
@@ -56,9 +76,12 @@ func resolveAssistantArgs(m *config.Manifest, args []string) ([]string, error) {
 	}
 	name := args[0]
 	if !assistant.IsKnown(name) {
-		return nil, fmt.Errorf("unknown assistant %q (use %s)", name, assistant.KnownNamesString())
+		// If not known, it must be in manifest
+		if _, err := m.ResolveAssistant(name); err != nil {
+			return nil, fmt.Errorf("unknown assistant %q (use %s)", name, assistant.KnownNamesString())
+		}
 	}
-	return m.AssistantNames([]string{name})
+	return []string{name}, nil
 }
 
 func init() {

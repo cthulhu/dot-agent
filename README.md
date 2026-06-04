@@ -76,6 +76,7 @@ dot-agent pull --apply
 |---------|-------------|
 | `init [--repo URL] [--path DIR]` | Create or clone the source git repo |
 | `add [claude\|cursor\|hermes\|codex\|gemini\|copilot\|antigravity]` | Capture local config into the repo |
+| `rm <assistant>` | Remove an assistant from the repo |
 | `apply [claude\|cursor\|hermes\|codex\|gemini\|copilot\|antigravity]` | Write repo config to local directories |
 | `diff [claude\|cursor\|hermes\|codex\|gemini\|copilot\|antigravity]` | Show differences (source vs local) |
 | `status` | Git status + config drift |
@@ -143,7 +144,7 @@ Default paths:
 
 | OS | Source repo | User config | Base library |
 |----|-------------|-------------|--------------|
-| macOS / Linux | `~/.local/share/dot-agent/source` | `~/.config/dot-agent/config.yaml` | `~/.dot-agent/base/skills` |
+| macOS / Linux | `~/.dot-agent/source` | `~/.dot-agent/config.yaml` | `~/.dot-agent/base/skills` |
 | Windows | `%LOCALAPPDATA%\dot-agent\source` | `%APPDATA%\dot-agent\config.yaml` | `%USERPROFILE%\.dot-agent\base\skills` |
 
 ### Base skills library
