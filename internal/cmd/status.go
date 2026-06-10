@@ -2,15 +2,17 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/cthulhu/dot-agent/internal/assistant"
 	"github.com/cthulhu/dot-agent/internal/git"
 	"github.com/cthulhu/dot-agent/internal/sync"
 	"github.com/spf13/cobra"
 )
 
 var statusCmd = &cobra.Command{
-	Use:   "status",
 	Short: "Show git status and config drift vs local",
+	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		m, sourceDir, err := loadManifest()
 		if err != nil {
@@ -32,7 +34,7 @@ var statusCmd = &cobra.Command{
 			fmt.Println(porcelain)
 		}
 
-		names, err := m.AssistantNames(nil)
+		names, err := resolveAssistantArgs(m, args)
 		if err != nil {
 			fatal(err)
 		}
@@ -53,5 +55,6 @@ var statusCmd = &cobra.Command{
 }
 
 func init() {
+	statusCmd.Use = fmt.Sprintf("status [%s]", strings.ReplaceAll(assistant.KnownNamesString(), ", ", "|"))
 	rootCmd.AddCommand(statusCmd)
 }
